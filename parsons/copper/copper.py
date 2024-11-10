@@ -51,12 +51,12 @@ class Copper(object):
 
         # GET request with non-None data arg is malformed
         if req_type == "GET":
-            return request(req_type, url, params=json.dumps(payload), headers=headers)
+            return request(req_type, url, params=json.dumps(payload), headers=headers, timeout=60)
         else:
             payload["page_number"] = page
             payload["page_size"] = page_size
 
-            return request(req_type, url, data=json.dumps(payload), headers=headers)
+            return request(req_type, url, data=json.dumps(payload), headers=headers, timeout=60)
 
     def paginate_request(self, endpoint, req_type, page_size=200, filters=None):
         # Internal pagination method
