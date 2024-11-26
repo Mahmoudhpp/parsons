@@ -232,10 +232,10 @@ class PostgresCore(PostgresCreateStatement):
 
         with self.cursor(connection) as cursor:
             # Check in pg tables for the table
-            sql = f"""select count(*) from pg_tables where schemaname='{schema}' and
-                     tablename='{table}';"""
+            sql = """select count(*) from pg_tables where schemaname=? and
+                     tablename=?;"""
 
-            cursor.execute(sql)
+            cursor.execute(sql, (schema, table, ))
             result = cursor.fetchone()[0]
 
             # Check in the pg_views if it is a view
