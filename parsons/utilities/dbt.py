@@ -37,6 +37,7 @@ from typing import List, Literal, Optional
 
 from parsons.notifications.slack import Slack
 from parsons.utilities import check_env
+from security import safe_command
 
 logger = logging.getLogger(__name__)
 
@@ -312,8 +313,7 @@ class dbtRunner:
             "DBT_SCHEMA": self.dbt_schema,
         }
 
-        process = subprocess.run(
-            commands,
+        process = safe_command.run(subprocess.run, commands,
             env=shell_environment,
             cwd=self.dbt_project_directory,
             text=True,
