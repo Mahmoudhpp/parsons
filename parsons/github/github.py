@@ -2,12 +2,12 @@ import logging
 from functools import partial, wraps
 
 import petl
-import requests
 from github import Github as PyGithub
 from github.GithubException import UnknownObjectException
 
 from parsons.etl.table import Table
 from parsons.utilities import check_env, files
+from security import safe_requests
 
 logger = logging.getLogger(__name__)
 
@@ -409,7 +409,7 @@ class GitHub(object):
                 "Authorization": f"token {self.access_token}",
             }
 
-        res = requests.get(
+        res = safe_requests.get(
             f"https://raw.githubusercontent.com/{repo_name}/{branch}/{path}",
             headers=headers,
         )

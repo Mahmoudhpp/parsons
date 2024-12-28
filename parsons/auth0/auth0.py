@@ -6,6 +6,7 @@ import time
 import requests
 from parsons.etl.table import Table
 from parsons.utilities import check_env
+from security import safe_requests
 
 logger = logging.getLogger(__name__)
 
@@ -70,7 +71,7 @@ class Auth0(object):
             Table Class
         """
         url = f"{self.base_url}/api/v2/users-by-email"
-        val = requests.get(url, headers=self.headers, params={"email": email})
+        val = safe_requests.get(url, headers=self.headers, params={"email": email})
         if val.status_code == 429:
             raise requests.exceptions.ConnectionError(val.json()["message"])
         return Table(val.json())
@@ -184,7 +185,7 @@ class Auth0(object):
         if job_id:
             # Check job status until complete
             while True:
-                status_response = requests.get(
+                status_response = safe_requests.get(
                     f"{self.base_url}/api/v2/jobs/{job_id}", headers=headers
                 )
                 status_data = status_response.json()
@@ -201,7 +202,7 @@ class Auth0(object):
                     return None
 
             # Download the users-export file
-            users_response = requests.get(download_url)
+            users_response = safe_requests.get(download_url)
 
             decompressed_data = gzip.decompress(users_response.content).decode("utf-8")
             users_data = []
@@ -226,7 +227,7 @@ class Auth0(object):
         """
         url = f"{self.base_url}/api/v2/connections"
 
-        response = requests.get(url, headers=self.headers)
+        response = safe_requests.get(url, headers=self.headers)
         connections = response.json()
 
         for connection in connections:

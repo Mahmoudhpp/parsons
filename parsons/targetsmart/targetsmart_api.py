@@ -7,11 +7,11 @@ https://docs.targetsmart.com/developers/tsapis/v2/index.html
 import logging
 
 import petl
-import requests
 from parsons.etl.table import Table
 from parsons.utilities import check_env
 
 from .targetsmart_smartmatch import SmartMatch
+from security import safe_requests
 
 URI = "https://api.targetsmart.com/"
 
@@ -25,7 +25,7 @@ class TargetSmartConnector:
         self.headers = {"x-api-key": self.api_key}
 
     def request(self, url, args=None, raw=False):
-        r = requests.get(url, headers=self.headers, params=args)
+        r = safe_requests.get(url, headers=self.headers, params=args)
 
         # This allows me to deal with data that needs to be munged.
         if raw:
