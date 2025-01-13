@@ -8,6 +8,8 @@
 # Set the configuration variables below or set environmental variables of the same name and leave
 # these with empty strings.  We recommend using environmental variables if possible.
 
+import secrets
+
 config_vars = {
     # VAN
     "VAN_API_KEY": "",
@@ -26,7 +28,6 @@ config_vars = {
 # ### CODE
 
 import os  # noqa: E402
-import random  # noqa: E402
 from parsons import VAN  # noqa: E402
 from parsons import logger  # noqa: E402
 
@@ -48,8 +49,7 @@ folder = van.get_folder(os.environ["VAN_FOLDER_ID"])
 saved_list_download = van.download_saved_list(os.environ["VAN_SAVED_LIST_ID"])
 
 # Generate a random sample of VAN IDs from the list
-saved_list_sample_ids = random.sample(
-    saved_list_download["VanID"],
+saved_list_sample_ids = secrets.SystemRandom().sample(saved_list_download["VanID"],
     int(os.environ["VAN_SAMPLE_LIST_SIZE"]),
 )
 
