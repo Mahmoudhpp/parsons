@@ -1,13 +1,13 @@
 import zipfile
 import csv
 import requests
-import xml.etree.ElementTree as ET
 import typing as t
 from datetime import datetime
 from dateutil.parser import parse as parsedate
 from pytz import timezone
 from io import BytesIO, StringIO
 from dataclasses import dataclass
+import defusedxml.ElementTree
 
 CLARITY_URL = "https://results.enr.clarityelections.com/"
 
@@ -227,7 +227,7 @@ class Scytl:
             The list of election results by precinct and vote method in the file.
         """
 
-        tree = ET.fromstring(county_data)
+        tree = defusedxml.ElementTree.fromstring(county_data)
 
         precinct_dict = {}
         precinct_votes = []
@@ -309,7 +309,7 @@ class Scytl:
             The list of election results by state and vote method in the file.
         """
 
-        root = ET.fromstring(state_data)
+        root = defusedxml.ElementTree.fromstring(state_data)
 
         county_dict = {}
         county_votes = []
