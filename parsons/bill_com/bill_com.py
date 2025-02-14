@@ -26,7 +26,7 @@ class BillCom(object):
             "orgId": org_id,
             "devKey": dev_key,
         }
-        response = requests.post(url="%sLogin.json" % api_url, data=params, headers=self.headers)
+        response = requests.post(url="%sLogin.json" % api_url, data=params, headers=self.headers, timeout=60)
         self.dev_key = dev_key
         self.api_url = api_url
         self.session_id = response.json()["response_data"]["sessionId"]
@@ -76,7 +76,7 @@ class BillCom(object):
         else:
             url = "%s%s/%s.json" % (self.api_url, action, object_name)
         payload = self._get_payload(data)
-        response = requests.post(url=url, data=payload, headers=self.headers)
+        response = requests.post(url=url, data=payload, headers=self.headers, timeout=60)
         return response.json()
 
     def _get_request_response(self, data, action, object_name, field="response_data"):

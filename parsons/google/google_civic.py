@@ -27,7 +27,7 @@ class GoogleCivic(object):
 
         args["key"] = self.api_key
 
-        r = requests.get(url, params=args)
+        r = requests.get(url, params=args, timeout=60)
 
         return r.json()
 
