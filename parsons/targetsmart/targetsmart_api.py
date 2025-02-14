@@ -25,7 +25,7 @@ class TargetSmartConnector:
         self.headers = {"x-api-key": self.api_key}
 
     def request(self, url, args=None, raw=False):
-        r = requests.get(url, headers=self.headers, params=args)
+        r = requests.get(url, headers=self.headers, params=args, timeout=60)
 
         # This allows me to deal with data that needs to be munged.
         if raw:

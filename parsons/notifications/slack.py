@@ -118,7 +118,7 @@ class Slack(object):
         payload = {"channel": channel, "text": text}
         if parent_message_id:
             payload["thread_ts"] = parent_message_id
-        return requests.post(webhook, json=payload)
+        return requests.post(webhook, json=payload, timeout=60)
 
     def message_channel(self, channel, text, parent_message_id=None, **kwargs):
         """

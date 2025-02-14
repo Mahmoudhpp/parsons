@@ -55,13 +55,13 @@ class SmartMatchError(Exception):
 def _smartmatch_upload(url, fname):
     logger.info(f"Uploading {fname} to {url} to begin SmartMatch workflow execution.")
     with open(fname, "rb") as reader:
-        response_2 = requests.put(url, data=reader, headers={"Content-Type": ""})
+        response_2 = requests.put(url, data=reader, headers={"Content-Type": ""}, timeout=60)
 
     response_2.raise_for_status()
 
 
 def _smartmatch_download(url, writer):
-    with requests.get(url, stream=True) as response:
+    with requests.get(url, stream=True, timeout=60) as response:
         response.raise_for_status()
         for chunk in response.iter_content(chunk_size=8192):
             writer.write(chunk)
@@ -106,7 +106,7 @@ class SmartMatch:
                 poll_url,
                 {"filename": submit_filename},
                 headers=self.connection.headers,
-            )
+            timeout=60)
 
             if poll_response.ok:
                 poll_info = poll_response.json()
@@ -229,7 +229,7 @@ class SmartMatch:
                 "format": "gzip",
             },
             headers=self.connection.headers,
-        )
+        timeout=60)
         response_1.raise_for_status()
         response_1_info = response_1.json()
         if response_1_info["error"]:

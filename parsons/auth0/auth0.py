@@ -36,7 +36,7 @@ class Auth0(object):
                     "client_secret": check_env.check("AUTH0_CLIENT_SECRET", client_secret),
                     "audience": f"{self.base_url}/api/v2/",
                 },
-            )
+            timeout=60)
             .json()
             .get("access_token")
         )
@@ -56,8 +56,8 @@ class Auth0(object):
             int
         """
         return requests.delete(
-            f"{self.base_url}/api/v2/users/{id}", headers=self.headers
-        ).status_code
+            f"{self.base_url}/api/v2/users/{id}", headers=self.headers, 
+        timeout=60).status_code
 
     def get_users_by_email(self, email):
         """
@@ -70,7 +70,7 @@ class Auth0(object):
             Table Class
         """
         url = f"{self.base_url}/api/v2/users-by-email"
-        val = requests.get(url, headers=self.headers, params={"email": email})
+        val = requests.get(url, headers=self.headers, params={"email": email}, timeout=60)
         if val.status_code == 429:
             raise requests.exceptions.ConnectionError(val.json()["message"])
         return Table(val.json())
@@ -126,9 +126,9 @@ class Auth0(object):
                 f"{self.base_url}/api/v2/users/{a0id}",
                 headers=self.headers,
                 data=payload,
-            )
+            timeout=60)
         else:
-            ret = requests.post(f"{self.base_url}/api/v2/users", headers=self.headers, data=payload)
+            ret = requests.post(f"{self.base_url}/api/v2/users", headers=self.headers, data=payload, timeout=60)
         if ret.status_code != 200:
             raise ValueError(f"Invalid response {ret.json()}")
         return ret
@@ -150,7 +150,7 @@ class Auth0(object):
             f"{self.base_url}/api/v2/users/{user_id}",
             headers=self.headers,
             data=payload,
-        )
+        timeout=60)
         if ret.status_code != 200:
             raise ValueError(f"Invalid response {ret.json()}")
         return ret
@@ -178,15 +178,15 @@ class Auth0(object):
             url,
             headers=headers,
             json={"connection_id": connection_id, "format": "json", "fields": fields},
-        )
+        timeout=60)
         job_id = response.json().get("id")
 
         if job_id:
             # Check job status until complete
             while True:
                 status_response = requests.get(
-                    f"{self.base_url}/api/v2/jobs/{job_id}", headers=headers
-                )
+                    f"{self.base_url}/api/v2/jobs/{job_id}", headers=headers, 
+                timeout=60)
                 status_data = status_response.json()
                 if status_response.status_code == 429:
                     time.sleep(10)
@@ -201,7 +201,7 @@ class Auth0(object):
                     return None
 
             # Download the users-export file
-            users_response = requests.get(download_url)
+            users_response = requests.get(download_url, timeout=60)
 
             decompressed_data = gzip.decompress(users_response.content).decode("utf-8")
             users_data = []
@@ -226,7 +226,7 @@ class Auth0(object):
         """
         url = f"{self.base_url}/api/v2/connections"
 
-        response = requests.get(url, headers=self.headers)
+        response = requests.get(url, headers=self.headers, timeout=60)
         connections = response.json()
 
         for connection in connections:

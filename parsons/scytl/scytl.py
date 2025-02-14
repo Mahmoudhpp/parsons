@@ -130,7 +130,7 @@ class Scytl:
             administrator=administrator, election_id=election_id
         )
 
-        res = requests.get(config_version_url, headers=BROWSER_HEADERS)
+        res = requests.get(config_version_url, headers=BROWSER_HEADERS, timeout=60)
 
         return res.text
 
@@ -149,7 +149,7 @@ class Scytl:
         """
 
         with BytesIO() as zipdata:
-            with requests.get(zipfile_url, headers=BROWSER_HEADERS) as res:
+            with requests.get(zipfile_url, headers=BROWSER_HEADERS, timeout=60) as res:
                 zipdata.write(res.content)
                 zipdata.flush()
 
@@ -183,7 +183,7 @@ class Scytl:
             state=state, election_id=election_id, version_num=version_num
         )
 
-        settings_json_res = requests.get(config_settings_json_url, headers=BROWSER_HEADERS)
+        settings_json_res = requests.get(config_settings_json_url, headers=BROWSER_HEADERS, timeout=60)
         settings_json = settings_json_res.json()
 
         participating_counties = settings_json["settings"]["electiondetails"][

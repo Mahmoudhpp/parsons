@@ -37,7 +37,7 @@ class TurboVote(object):
 
         url = self.uri + "login"
         payload = {"username": self.username, "password": self.password}
-        r = requests.post(url, data=payload)
+        r = requests.post(url, data=payload, timeout=60)
         logger.debug(r.url)
         r.raise_for_status()
 
@@ -55,7 +55,7 @@ class TurboVote(object):
         url = self.uri + f"partners/{self.subdomain}.turbovote.org/users"
 
         headers = {"Authorization": f"Bearer {self._get_token()}"}
-        r = requests.get(url, headers=headers)
+        r = requests.get(url, headers=headers, timeout=60)
         logger.debug(r)
         r.raise_for_status()
         tbl = Table.from_csv_string(r.text)
