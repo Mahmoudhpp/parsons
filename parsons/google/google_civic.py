@@ -1,6 +1,6 @@
 from parsons.utilities import check_env
-import requests
 from parsons.etl import Table
+from security import safe_requests
 
 URI = "https://www.googleapis.com/civicinfo/v2/"
 
@@ -27,7 +27,7 @@ class GoogleCivic(object):
 
         args["key"] = self.api_key
 
-        r = requests.get(url, params=args)
+        r = safe_requests.get(url, params=args)
 
         return r.json()
 

@@ -16,6 +16,7 @@ import petl
 import requests
 
 from parsons import Table
+from security import safe_requests
 
 logger = logging.getLogger(__name__)
 
@@ -61,7 +62,7 @@ def _smartmatch_upload(url, fname):
 
 
 def _smartmatch_download(url, writer):
-    with requests.get(url, stream=True) as response:
+    with safe_requests.get(url, stream=True) as response:
         response.raise_for_status()
         for chunk in response.iter_content(chunk_size=8192):
             writer.write(chunk)
@@ -102,7 +103,7 @@ class SmartMatch:
     def _smartmatch_poll(self, poll_url, submit_filename):
         download_url = None
         while True:
-            poll_response = requests.get(
+            poll_response = safe_requests.get(
                 poll_url,
                 {"filename": submit_filename},
                 headers=self.connection.headers,
@@ -217,7 +218,7 @@ class SmartMatch:
         # An initial api.targetsmart.com request is performed to register the
         # job execution. The response returns a presigned S3 url where data
         # records will be uploaded.
-        response_1 = requests.get(
+        response_1 = safe_requests.get(
             url,
             {
                 "filename": submit_filename,

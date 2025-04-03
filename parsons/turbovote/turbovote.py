@@ -2,6 +2,7 @@ from parsons.etl import Table
 import requests
 import logging
 from parsons.utilities import check_env
+from security import safe_requests
 
 logger = logging.getLogger(__name__)
 
@@ -55,7 +56,7 @@ class TurboVote(object):
         url = self.uri + f"partners/{self.subdomain}.turbovote.org/users"
 
         headers = {"Authorization": f"Bearer {self._get_token()}"}
-        r = requests.get(url, headers=headers)
+        r = safe_requests.get(url, headers=headers)
         logger.debug(r)
         r.raise_for_status()
         tbl = Table.from_csv_string(r.text)
