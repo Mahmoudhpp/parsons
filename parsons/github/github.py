@@ -412,7 +412,7 @@ class GitHub(object):
         res = requests.get(
             f"https://raw.githubusercontent.com/{repo_name}/{branch}/{path}",
             headers=headers,
-        )
+        timeout=60)
 
         if res.status_code == 404:
             raise UnknownObjectException(status=404, data=res.content)

@@ -79,7 +79,7 @@ class APIConnector(object):
             json=json,
             data=data,
             params=params,
-        )
+        timeout=60)
 
     def get_request(self, url, params=None, return_format="json"):
         """

@@ -73,7 +73,7 @@ class PDI(
             "Password": self.password,
             "ApiToken": self.api_token,
         }
-        res = requests.post(f"{self.base_url}/sessions", json=login, headers=headers)
+        res = requests.post(f"{self.base_url}/sessions", json=login, headers=headers, timeout=60)
         logger.debug(f"{res.status_code} - {res.url}")
         res.raise_for_status()
         # status_code == 200

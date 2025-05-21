@@ -43,7 +43,7 @@ class MobilizeAmerica(object):
         else:
             header = None
 
-        r = _request(req_type, url, json=post_data, params=args, headers=header)
+        r = _request(req_type, url, json=post_data, params=args, headers=header, timeout=60)
 
         r.raise_for_status()
 

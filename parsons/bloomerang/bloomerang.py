@@ -60,7 +60,7 @@ class Bloomerang(object):
 
     def _generate_authorization_code(self):
         data = {"client_id": self.client_id, "response_type": "code"}
-        r = requests.post(url=self.uri_auth, json=data)
+        r = requests.post(url=self.uri_auth, json=data, timeout=60)
         self.authorization_code = r.json().get("code", None)
 
     def _generate_access_token(self):
@@ -70,7 +70,7 @@ class Bloomerang(object):
             "grant_type": "authorization_code",
             "code": self.authorization_code,
         }
-        r = requests.post(url=self.uri + "oauth/token", json=data)
+        r = requests.post(url=self.uri + "oauth/token", json=data, timeout=60)
         self.access_token = r.json().get("access_token", None)
 
     def _base_endpoint(self, endpoint, entity_id=None):

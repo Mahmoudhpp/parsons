@@ -42,7 +42,7 @@ class Hustle(object):
             "grant_type": "client_credentials",
         }
 
-        r = request("POST", self.uri + "oauth/token", data=data)
+        r = request("POST", self.uri + "oauth/token", data=data, timeout=60)
         logger.debug(r.json())
 
         self.auth_token = r.json()["access_token"]
@@ -74,7 +74,7 @@ class Hustle(object):
         if args:
             parameters.update(args)
 
-        r = request(req_type, url, params=parameters, json=payload, headers=headers)
+        r = request(req_type, url, params=parameters, json=payload, headers=headers, timeout=60)
 
         self._error_check(r, raise_on_error)
 
@@ -88,7 +88,7 @@ class Hustle(object):
         # Pagination
         while r.json()["pagination"]["hasNextPage"] == "true":
             parameters["cursor"] = r.json["pagination"]["cursor"]
-            r = request(req_type, url, params=parameters, headers=headers)
+            r = request(req_type, url, params=parameters, headers=headers, timeout=60)
             self._error_check(r, raise_on_error)
             result.append(r.json()["items"])
 

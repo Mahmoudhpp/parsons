@@ -35,7 +35,7 @@ class CrowdTangle(object):
         if args is not None:
             base_args.update(args)
 
-        r = request(req_type, url, params=base_args).json()
+        r = request(req_type, url, params=base_args, timeout=60).json()
         json = r["result"]
         keys = list(json.keys())
         data = json[keys[0]]
@@ -44,7 +44,7 @@ class CrowdTangle(object):
             logger.info(f"Retrieving {PAGE_SIZE} rows.")
             time.sleep(REQUEST_SLEEP)
             next_url = json["pagination"]["nextPage"]
-            r = request(req_type, next_url).json()
+            r = request(req_type, next_url, timeout=60).json()
             json = r["result"]
             data.extend(json[keys[0]])
 
