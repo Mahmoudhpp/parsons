@@ -8,6 +8,7 @@ from dateutil.parser import parse as parsedate
 from pytz import timezone
 from io import BytesIO, StringIO
 from dataclasses import dataclass
+from security import safe_requests
 
 CLARITY_URL = "https://results.enr.clarityelections.com/"
 
@@ -130,7 +131,7 @@ class Scytl:
             administrator=administrator, election_id=election_id
         )
 
-        res = requests.get(config_version_url, headers=BROWSER_HEADERS)
+        res = safe_requests.get(config_version_url, headers=BROWSER_HEADERS)
 
         return res.text
 
@@ -149,7 +150,7 @@ class Scytl:
         """
 
         with BytesIO() as zipdata:
-            with requests.get(zipfile_url, headers=BROWSER_HEADERS) as res:
+            with safe_requests.get(zipfile_url, headers=BROWSER_HEADERS) as res:
                 zipdata.write(res.content)
                 zipdata.flush()
 
@@ -183,7 +184,7 @@ class Scytl:
             state=state, election_id=election_id, version_num=version_num
         )
 
-        settings_json_res = requests.get(config_settings_json_url, headers=BROWSER_HEADERS)
+        settings_json_res = safe_requests.get(config_settings_json_url, headers=BROWSER_HEADERS)
         settings_json = settings_json_res.json()
 
         participating_counties = settings_json["settings"]["electiondetails"][
