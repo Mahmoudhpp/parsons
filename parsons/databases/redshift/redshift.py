@@ -17,7 +17,7 @@ import pickle
 import petl
 from contextlib import contextmanager
 import datetime
-import random
+import secrets
 
 # Max number of rows that we query at a time, so we can avoid loading huge
 # data sets into memory.
@@ -1022,7 +1022,7 @@ class Redshift(
                 table_obj, target_table, drop_dependencies=alter_table_cascade
             )
 
-        noise = f"{random.randrange(0, 10000):04}"[:4]
+        noise = f"{secrets.SystemRandom().randrange(0, 10000):04}"[:4]
         date_stamp = datetime.datetime.now().strftime("%Y%m%d_%H%M")
         # Generate a temp table like "table_tmp_20200210_1230_14212"
         staging_tbl = "{}_stg_{}_{}".format(target_table, date_stamp, noise)

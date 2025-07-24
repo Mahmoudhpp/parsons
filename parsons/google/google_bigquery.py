@@ -1,7 +1,6 @@
 import datetime
 import logging
 import pickle
-import random
 import uuid
 from contextlib import contextmanager
 from typing import List, Optional, Union
@@ -23,6 +22,7 @@ from parsons.google.utilities import (
 )
 from parsons.utilities import check_env
 from parsons.utilities.files import create_temp_file
+import secrets
 
 logger = logging.getLogger(__name__)
 
@@ -941,7 +941,7 @@ class GoogleBigQuery(DatabaseConnector):
             if diff > 0:
                 raise ValueError("Primary key column contains duplicate values.")
 
-        noise = f"{random.randrange(0, 10000):04}"[:4]
+        noise = f"{secrets.SystemRandom().randrange(0, 10000):04}"[:4]
         date_stamp = datetime.datetime.now().strftime("%Y%m%d_%H%M")
         # Generate a temp table like "table_tmp_20200210_1230_14212"
         staging_tbl = f"{target_table}_stg_{date_stamp}_{noise}"
